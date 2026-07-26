@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Error | FootStyle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--color-bg); text-align: center; padding: 2rem;">
+    <div>
+        <svg style="width: 80px; height: 80px; fill: var(--color-accent-gold); margin-bottom: 2rem;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V6h2v7z"/></svg>
+        <h1 style="font-family: var(--font-heading); color: var(--color-primary); font-size: 3rem; margin-bottom: 1rem;">500 - Server Error</h1>
+        <p style="font-family: var(--font-body); color: var(--color-text); margin-bottom: 2rem;">Our servers are taking a quick shoe break. Please try again in a moment!</p>
+        <a href="{% url 'home' %}" class="btn btn-gold">Back to Shop</a>
+    </div>
+</body>
+</html>

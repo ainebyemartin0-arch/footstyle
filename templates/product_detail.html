@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ product.name }} - FootStyle{% endblock %}
+
+{% block content %}
+<section class="detail-container">
+    <div class="detail-gallery scroll-reveal">
+        <div class="gallery-main">
+            {% if product.main_image %}
+            <img id="mainDetailImg" src="{{ product.main_image.url }}" alt="{{ product.name }}">
+            {% else %}
+            <div style="display:flex; align-items:center; justify-content:center; height:100%;">Image Coming Soon</div>
+            {% endif %}
+        </div>
+        <div class="gallery-thumbnails">
+            <!-- Always show Main Image as first thumb -->
+            {% if product.main_image %}
+            <div class="thumb active" data-full="{{ product.main_image.url }}" onclick="switchGalleryImage(this)">
+                <img src="{{ product.main_image.url }}" alt="Main View">
+            </div>
+            {% endif %}
+            <!-- Loop through extra angle shots from database -->
+            {% for img in angle_images %}
+            <div class="thumb" data-full="{{ img.image.url }}" onclick="switchGalleryImage(this)">
+                <img src="{{ img.image.url }}" alt="{{ img.alt_text|default:'Angle View' }}">
+            </div>
+            {% empty %}
+            <!-- Fallback: If no extra images uploaded, repeat main image as placeholder -->
+            {% if product.main_image %}
+            <div class="thumb" data-full="{{ product.main_image.url }}" onclick="switchGalleryImage(this)">
+                <img src="{{ product.main_image.url }}" alt="View 2">
+            </div>
+            <div class="thumb" data-full="{{ product.main_image.url }}" onclick="switchGalleryImage(this)">
+                <img src="{{ product.main_image.url }}" alt="View 3">
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="detail-info scroll-reveal">
+        <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--color-secondary);">{{ product.category.name }}</p>
+        <h1 class="detail-title">{{ product.name }}</h1>
+        
+        <div class="detail-price-row">
+            {% if product.promotional_price %}
+            <span class="detail-old-price">UGX {{ product.price|intcomma }}</span>
+            <span class="detail-main-price">UGX {{ product.get_display_price|intcomma }}</span>
+            <span class="sale-badge" style="font-size: 1rem;">Sale</span>
+            {% else %}
+            <span class="detail-main-price">UGX {{ product.get_display_price|intcomma }}</span>
+            {% endif %}
+        </div>
+
+        {% if product.availability_status == 'available_to_order' %}
+        <div class="info-badge" style="color: var(--color-accent-gold);">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            Available to Order (Justin will fetch it)
+        </div>
+        {% elif product.availability_status == 'in_stock' %}
+        <div class="info-badge" style="color: var(--color-success);">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            In Stock (Ready to deliver)
+        </div>
+        {% endif %}
+
+        <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+            <div class="info-badge">
+                <svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                Delivery Fee TBD
+            </div>
+            <div class="info-badge">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                Buyer Protection
+            </div>
+        </div>
+
+        <p class="detail-desc" style="margin-top: 1rem;">{{ product.description }}</p>
+
+        {% if size_list %}
+        <div style="margin-top: 1.5rem;">
+            <h4 style="margin-bottom:0.5rem;">Select Size</h4>
+            <div class="selector-group" id="size-selector">
+                {% for size in size_list %}
+                <button class="pill-btn" data-size="{{ size }}">{{ size }}</button>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if color_list %}
+        <div style="margin-top: 1rem;">
+            <h4 style="margin-bottom:0.5rem;">Select Color</h4>
+            <div class="selector-group" id="color-selector">
+                {% for color in color_list %}
+                <button class="pill-btn" data-color="{{ color }}">{{ color }}</button>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 2.5rem;">
+            <form action="{% url 'add_to_cart' product.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.2rem; padding: 1.2rem;">
+                    <svg style="width:24px; height:24px; fill:white;" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    Add to Cart
+                </button>
+            </form>
+            <a href="https://wa.me/256761237882?text=Hi%20Justin!%20I%20have%20a%20question%20about%20{{ product.name }}" target="_blank" class="btn btn-outline" style="width: 100%;">
+                <svg style="width:20px; height:20px; fill:currentColor;" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+                Ask a Question
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

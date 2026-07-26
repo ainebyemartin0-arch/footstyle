@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<section class="catalog-container">
+    <aside class="filter-sidebar scroll-reveal">
+        <div>
+            <h4 class="filter-title">Categories</h4>
+            <a href="{% url 'product_list' %}" class="filter-link {% if not selected_category %}active{% endif %}">All Shoes</a>
+            {% for cat in categories %}
+            <a href="{% url 'product_list_by_category' cat.slug %}" class="filter-link {% if selected_category == cat %}active{% endif %}">{{ cat.name }}</a>
+            {% endfor %}
+        </div>
+        <div style="margin-top:2rem;">
+            <h4 class="filter-title">Sort By</h4>
+            <form method="get" style="display:flex; flex-direction:column; gap:0.5rem;">
+                <select name="sort" onchange="this.form.submit()" class="form-input" style="padding: 0.5rem;">
+                    <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Newest</option>
+                    <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                    <option value="popularity" {% if sort_by == 'popularity' %}selected{% endif %}>Popularity</option>
+                </select>
+                <input type="text" name="search" placeholder="Search shoes..." value="{{ search_query }}" class="form-input" style="padding: 0.5rem;">
+            </form>
+        </div>
+    </aside>
+
+    <div>
+        <h2 style="margin-bottom: 1rem;">{{ selected_category.name|default:"All Shoes" }}</h2>
+        {% if products %}
+        <div class="product-grid">
+            {% for product in products %}
+            <!-- PREMIUM CARD UPGRADE -->
+            <a href="{% url 'product_detail' product.slug %}" class="product-card scroll-reveal" style="transition-delay: {{ forloop.counter0 }}00ms;">
+                <div class="card-image-wrapper">
+                    {% if product.main_image %}
+                    <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="card-img">
+                    {% else %}
+                    <div class="card-img" style="display:flex; align-items:center; justify-content:center;">Image Coming Soon</div>
+                    {% endif %}
+                    <!-- Wishlist Heart Button -->
+                    <button class="wishlist-btn" aria-label="Add to wishlist" onclick="event.preventDefault(); toggleWishlist(this);">
+                        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.77-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <p class="card-category">{{ product.category.name }}</p>
+                    <h3 class="card-title">{{ product.name }}</h3>
+                    <div class="card-price-row">
+                        {% if product.promotional_price %}
+                        <span class="card-original-price">UGX {{ product.price|intcomma }}</span>
+                        <span class="card-sale-price">UGX {{ product.get_display_price|intcomma }}</span>
+                        <span class="sale-badge">Sale</span>
+                        {% else %}
+                        <span class="card-sale-price">UGX {{ product.get_display_price|intcomma }}</span>
+                        {% endif %}
+                    </div>
+                    {% if product.sizes_available %}
+                    <p class="card-sizes">Sizes: {{ product.sizes_available }}</p>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No shoes found.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

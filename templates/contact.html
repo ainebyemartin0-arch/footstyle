@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - FootStyle{% endblock %}
+
+{% block content %}
+<section class="cart-container" style="padding-top: 8rem;">
+    <div class="scroll-reveal" style="max-width: 600px; margin: 0 auto; text-align: center;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">Contact Justin</h1>
+        <p style="margin-bottom: 2rem;">The fastest way to reach me is directly via WhatsApp. I respond within minutes during business hours!</p>
+        
+        <div style="background: var(--color-surface); padding: 2rem; border-radius: var(--radius-xl); margin-bottom: 2rem;">
+            <h3>WhatsApp (Primary)</h3>
+            <a href="https://wa.me/256761237882?text=Hi%20Justin!%20I%20have%20a%20question%20about%20FootStyle." target="_blank" class="btn btn-whatsapp" style="margin-top: 1rem; font-size: 1.2rem;">
+                Chat on WhatsApp
+            </a>
+        </div>
+
+        <div style="background: var(--color-surface); padding: 2rem; border-radius: var(--radius-xl); margin-bottom: 2rem;">
+            <h3>Phone Call</h3>
+            <p style="font-weight: 600; margin-top: 1rem;">+256 761 237882</p>
+            <p style="font-size: 0.9rem;">Available Mon-Sat, 9am - 6pm (EAT)</p>
+        </div>
+
+        <div style="background: var(--color-surface); padding: 2rem; border-radius: var(--radius-xl);">
+            <h3>Business Location</h3>
+            <p style="font-weight: 600; margin-top: 1rem;">Central Uganda (Kampala Region)</p>
+            <p style="font-size: 0.9rem;">As a mobile business, my location changes daily! Check the website banner or WhatsApp for my daily market stop.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

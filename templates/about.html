@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - FootStyle{% endblock %}
+
+{% block content %}
+<section class="cart-container" style="padding-top: 8rem;">
+    <div class="scroll-reveal" style="max-width: 800px; margin: 0 auto;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">About FootStyle</h1>
+        <p style="color: var(--color-accent-gold); font-weight: 600; font-size: 1.2rem;">Fashion Starts from the Ground Up.</p>
+        
+        <div style="margin-top: 2rem; line-height: 1.8;">
+            <p>Welcome to FootStyle! I am Justin, the founder and the engine behind this brand. I started this business right here in Central Uganda with one simple belief: <strong>Everyone deserves to step out in style, no matter their budget or location.</strong></p>
+            
+            <p>Because I don't operate out of a traditional, expensive physical shop, I am able to bring you premium, fashionable footwear at incredibly affordable prices. I know the streets of Kampala, and I know what looks good on them.</p>
+            
+            <p>When you order from FootStyle, you aren't just buying a shoe—you are buying a promise. I personally verify every pair, handle the logistics, and ensure it reaches your doorstep safely. Whether you are a boss lady hitting the office, a gentleman on the move, or a parent looking for durable school shoes for your kids, I've got you covered.</p>
+        </div>
+
+        <div style="margin-top: 3rem; text-align: center;">
+            <a href="{% url 'contact' %}" class="btn btn-primary">Get In Touch</a>
+            <a href="{% url 'product_list' %}" class="btn btn-gold" style="margin-left: 1rem;">Browse Catalog</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

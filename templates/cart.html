@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<section class="cart-container">
+    <h1 style="margin-bottom: 2rem;">Your Shopping Cart</h1>
+
+    {% if cart_items %}
+    <div class="scroll-reveal">
+        {% for item in cart_items %}
+        <div class="cart-item">
+            {% if item.product.main_image %}
+            <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" class="cart-item-img">
+            {% else %}
+            <div class="cart-item-img" style="display:flex; align-items:center; justify-content:center;">No Img</div>
+            {% endif %}
+            
+            <div class="cart-item-details">
+                <h3>{{ item.product.name }}</h3>
+                <p>Quantity: {{ item.quantity }}</p>
+                <p style="font-weight:700; color: var(--color-accent-gold);">UGX {{ item.total_item_price|intcomma }}</p>
+            </div>
+
+            <form action="{% url 'remove_from_cart' item.product.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Remove</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="cart-summary scroll-reveal" style="text-align: right;">
+        <h2>Subtotal: <span style="color: var(--color-accent-gold);">UGX {{ subtotal|intcomma }}</span></h2>
+        <p style="font-size: 0.9rem; color: var(--color-text); margin-bottom: 1rem;">Delivery fee will be confirmed by Justin based on your address.</p>
+        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+            <a href="{% url 'product_list' %}" class="btn btn-primary">Continue Shopping</a>
+            <a href="{% url 'checkout' %}" class="btn btn-gold">Proceed to Checkout</a>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="scroll-reveal" style="text-align: center; padding: 4rem 0;">
+        <h2>Your cart is empty!</h2>
+        <p style="margin-top: 1rem;">Looks like you haven't added any shoes yet.</p>
+        <a href="{% url 'product_list' %}" class="btn btn-primary" style="margin-top: 2rem;">Browse Catalog</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

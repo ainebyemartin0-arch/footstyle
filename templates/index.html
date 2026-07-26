@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}FootStyle - Fashion Starts from the Ground Up{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div>
+        <h1 class="hero-title">Fashion Starts <br>From the <span style="color: var(--color-accent-gold);">Ground Up</span>.</h1>
+        <p class="hero-subtitle">Premium footwear for Women, Men, and Kids. Delivered straight to your door in Central Uganda.</p>
+        <!-- FIXED: Buttons now go to actual catalog categories -->
+        <div style="display: flex; gap: 1rem; justify-content: center; opacity: 0; animation: fadeUp 0.6s var(--ease-out-expo) 0.4s forwards;">
+            <a href="{% url 'product_list_by_category' category_slug='women' %}" class="btn btn-primary">Shop Women</a>
+            <a href="{% url 'product_list_by_category' category_slug='men' %}" class="btn btn-gold">Shop Men</a>
+        </div>
+    </div>
+</section>
+
+<section style="padding: 4rem 2rem; max-width: 1200px; margin: 0 auto;">
+    <h2 class="scroll-reveal" style="text-align: center; font-size: 2rem; margin-bottom: 2rem;">Featured Shoes</h2>
+    
+    {% if featured_products %}
+    <div class="product-grid scroll-reveal">
+        {% for product in featured_products %}
+        <a href="{% url 'product_detail' product.slug %}" class="product-card">
+            <div class="card-image-wrapper">
+                {% if product.main_image %}
+                <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="card-img">
+                {% else %}
+                <div class="card-img" style="display:flex; align-items:center; justify-content:center;">Image Coming Soon</div>
+                {% endif %}
+                <button class="wishlist-btn" aria-label="Add to wishlist" onclick="event.preventDefault(); toggleWishlist(this);">
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.77-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </button>
+            </div>
+            <div class="card-body">
+                <p class="card-category">{{ product.category.name }}</p>
+                <h3 class="card-title">{{ product.name }}</h3>
+                <div class="card-price-row">
+                    {% if product.promotional_price %}
+                    <span class="card-original-price">UGX {{ product.price|intcomma }}</span>
+                    <span class="card-sale-price">UGX {{ product.get_display_price|intcomma }}</span>
+                    <span class="sale-badge">Sale</span>
+                    {% else %}
+                    <span class="card-sale-price">UGX {{ product.get_display_price|intcomma }}</span>
+                    {% endif %}
+                </div>
+                {% if product.sizes_available %}
+                <p class="card-sizes">Sizes: {{ product.sizes_available }}</p>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="scroll-reveal" style="text-align: center;">Justin is updating her catalog! Check back soon.</p>
+    {% endif %}
+</section>
+{% endblock %}
