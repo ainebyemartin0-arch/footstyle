@@ -63,10 +63,11 @@ DATABASES = {
     }
 }
 
-# This tells Django to use Postgres if deployed to Render, but SQLite locally
-if 'DATABASE_URL' in os.environ:
-    DATABASES['default'] = dj_database_url.config(default=os.environ['DATABASE_URL'])
-
+# Safely check for the Postgres database URL
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL and DATABASE_URL.startswith('postgres'):
+    DATABASES['default'] = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
+    
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
