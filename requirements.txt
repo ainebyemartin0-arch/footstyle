@@ -6,3 +6,4 @@ dj-database-url
 Django
 Pillow
 python-decouple
+django-cloudinary-storage
